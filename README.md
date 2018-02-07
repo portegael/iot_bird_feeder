@@ -4,7 +4,7 @@ This is the source code of the IoT Bird feeder based on Arduino MKR FOX 1200 for
 I won the second prize with this prototype and I am currently working on the new features.
 What will you find here, all the information I can provide, such as the system architecture, the hardware design, the arduino code and much more.
 
-![Little guy is curious](/media/Misc/picture01.jpg?raw=true "Little guy is getting curious!")
+![Little guy is curious](/Media/Misc/picture01.jpg?raw=true "Little guy is getting curious!")
 
 *<h2>System Architecture</h2>*
 
@@ -13,7 +13,7 @@ Here is the system architecture thought for the future version of the IoT bird f
 *<h2>Hardware Design</h2>*
 
 Here is the schematics for the prototype.
-![Schematics](/media/HW/Schematics.png?raw=true "Schematics")
+![Schematics](/Media/HW/Schematics.png?raw=true "Schematics")
 
 *<h2>Contact</h2>*
 Feel free to follow the official IoT bird feeder Twitter : https://twitter.com/Iot_Birdfeeder
