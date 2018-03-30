@@ -6,14 +6,16 @@
   Desc    : Main file waiting for an IT to read the meteo and send it through sigfox
 ******************************************************************/
 
-#include "ArduinoLowPower.h"
-#include "humidity_driver.h"
-#include "sigfox_driver.h"
+//#include "ArduinoLowPower.h"
+#include "dht22.h"
+//#include "sigfox_driver.h"
+#include "configuration.h"
 
 bool vibrationFlag = false;
 int vibrationPin = 0;
 
-byte humidityValue = 0;
+uint8_t humidityValue = 0;
+int8_t temperatureValue = 0;
 
 void vibrationIT(void) {
 
@@ -25,13 +27,29 @@ void setup() {
 
   DHT_Init();
 
-  pinMode(vibrationPin, INPUT_PULLUP);
-  LowPower.attachInterruptWakeup(vibrationPin, vibrationIT, FALLING);
+//  pinMode(vibrationPin, INPUT_PULLUP);
+//  LowPower.attachInterruptWakeup(vibrationPin, vibrationIT, FALLING);
 
 }
 
 void loop() {
 
+  delay(2000);
+  
+  humidityValue = DHT_ReadHumidity();
+  Serial.print("Humidity read : ");
+  Serial.print(humidityValue);
+  Serial.println(" %");
+
+  temperatureValue = DHT_ReadTemperature();
+  Serial.print("Temperature read : ");
+  Serial.print(temperatureValue);
+  Serial.println(" °C");
+
+
+  Serial.println(" ");
+  
+/*
   if (true == vibrationFlag)
   {
     vibrationFlag = false;
@@ -42,4 +60,5 @@ void loop() {
   }
 
   LowPower.sleep();
+  */
 }
