@@ -7,7 +7,7 @@
 ******************************************************************/
 
 //#include "ArduinoLowPower.h"
-#include "dht22.h"
+#include "dht22_driver.h"
 //#include "sigfox_driver.h"
 #include "configuration.h"
 

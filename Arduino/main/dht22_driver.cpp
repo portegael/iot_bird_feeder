@@ -9,7 +9,7 @@
   | 03/30/2018 | Change device from DHT11 to DHT22   |
   | -------------------------------------------------|
 ******************************************************************/
-#include "dht22.h"
+#include "dht22_driver.h"
 #include "DHT.h"
 #include "configuration.h"
 
