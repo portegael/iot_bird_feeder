@@ -7,6 +7,7 @@
 ******************************************************************/
 #include "sigfox_driver.h"
 #include "SigFox.h"
+#include "configuration.h"
 
 typedef struct __attribute__ ((packed)) sfxMessage {
   byte humidity;

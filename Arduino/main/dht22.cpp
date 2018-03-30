@@ -9,15 +9,13 @@
   | 03/30/2018 | Change device from DHT11 to DHT22   |
   | -------------------------------------------------|
 ******************************************************************/
-#include "humidity_driver.h"
+#include "dht22.h"
 #include "DHT.h"
+#include "configuration.h"
 
 /*
  * This code is based on the AdaFruit example DHT Tester 
  */
-
-#define DHTPIN 50
-#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -43,11 +41,12 @@ uint8_t DHT_ReadHumidity(void) {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
-  
+
+#ifdef DEBUG_MODE
   Serial.print("Humidity : ");
   Serial.print(humidity);
   Serial.println(" %");
-
+#endif
 
   return humidity;
 
@@ -60,6 +59,22 @@ uint8_t DHT_ReadHumidity(void) {
  */
 int8_t DHT_ReadTemperature(void)
 {
+  // Read temperature as Celsius (the default)
+  float temperature = dht.readTemperature();
+
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(temperature)){
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+  
+#ifdef DEBUG_MODE
+  Serial.print("Temperature : ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+#endif
+  
+  return (int8_t)temperature;
 }
 
 

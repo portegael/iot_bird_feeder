@@ -5,8 +5,13 @@
   Project : Iot Bird Feeder
   Desc    : Driver used to send sigfox messages
 ******************************************************************/
+#ifndef _SIGFOX_DRIVER_H_
+#define _SIGFOX_DRIVER_H_
+
 #include "Arduino.h"
 
 void SFX_SendMessage(byte *humidity);
+
+#endif // _SIGFOX_DRIVER_H_
 
 
