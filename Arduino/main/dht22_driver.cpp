@@ -17,7 +17,7 @@
  * This code is based on the AdaFruit example DHT Tester 
  */
 
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht(Dht22Pin, DHTTYPE);
 
 //_________________________________________________________________________________________________________
 /**

@@ -7,9 +7,12 @@
 ******************************************************************/
 
 //#include "ArduinoLowPower.h"
-#include "dht22_driver.h"
-//#include "sigfox_driver.h"
 #include "configuration.h"
+
+#include "dht22_driver.h"
+#include "raindrop_driver.h"
+//#include "sigfox_driver.h"
+
 
 bool vibrationFlag = false;
 int vibrationPin = 0;
@@ -25,7 +28,7 @@ void vibrationIT(void) {
 void setup() {
   Serial.begin(9600);
 
-  DHT_Init();
+ // DHT_Init();
 
 //  pinMode(vibrationPin, INPUT_PULLUP);
 //  LowPower.attachInterruptWakeup(vibrationPin, vibrationIT, FALLING);
@@ -35,7 +38,7 @@ void setup() {
 void loop() {
 
   delay(2000);
-  
+ /* 
   humidityValue = DHT_ReadHumidity();
   Serial.print("Humidity read : ");
   Serial.print(humidityValue);
@@ -45,8 +48,13 @@ void loop() {
   Serial.print("Temperature read : ");
   Serial.print(temperatureValue);
   Serial.println(" °C");
+*/
 
-
+  Raindrop_GetRainLevel();
+  if(Raindrop_isRaining())
+  {
+    Serial.println("Watch out ! It is raining !");
+  }
   Serial.println(" ");
   
 /*
