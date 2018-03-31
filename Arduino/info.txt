@@ -1,0 +1,7 @@
+Rain Drop sensor
+
+Digital 1 = no rain
+Digital 0 = rain
+
+Analogic no rain = 600
+Analogic rain = 200
