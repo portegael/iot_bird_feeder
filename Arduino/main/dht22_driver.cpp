@@ -39,7 +39,7 @@ uint8_t DHT_ReadHumidity(void) {
   if (isnan(humidity))
   {
     Serial.println("Failed to read from DHT sensor!");
-    return;
+    return 0xFF;
   }
 
 #ifdef DEBUG_MODE
@@ -49,7 +49,6 @@ uint8_t DHT_ReadHumidity(void) {
 #endif
 
   return humidity;
-
 }
 
 //_________________________________________________________________________________________________________
@@ -65,7 +64,7 @@ int8_t DHT_ReadTemperature(void)
   // Check if any reads failed and exit early (to try again).
   if (isnan(temperature)){
     Serial.println("Failed to read from DHT sensor!");
-    return;
+    return -96;
   }
   
 #ifdef DEBUG_MODE
