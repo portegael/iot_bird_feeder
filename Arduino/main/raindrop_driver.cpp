@@ -20,7 +20,7 @@ bool fRaindrop_isRaining(void)
 {
   bool isRaining = false;
   
-  int data = digitalRead(RainDropDigitalPin);
+  int data = digitalRead(RAINDROP_DIGITAL_PIN);
 
   if(0 == data)
   {
@@ -42,7 +42,7 @@ bool fRaindrop_isRaining(void)
  */
 uint16_t fRaindrop_GetRainLevel(void)
 {
-  uint16_t level = (uint16_t)analogRead(RainDropAnalogPin);
+  uint16_t level = (uint16_t)analogRead(RAINDROP_ANALOG_PIN);
 
 #ifdef DEBUG_MODE
   Serial.print("Level of Rain : ");

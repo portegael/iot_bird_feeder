@@ -5,18 +5,18 @@
   Project : Iot Bird Feeder
   Desc    : Main file waiting for an IT to read the meteo and send it through sigfox
 ******************************************************************/
-
 #include "ArduinoLowPower.h"
 #include "configuration.h"
 
 #include "raindrop_driver.h"
+#include "foodlevel_driver.h"
 #include "sigfox_driver.h"
 
 
 static bool vibrationFlag = false;
 static uint8_t numberIT = 0;
 
-weatherInfoStructure st_weatherData = {0, 0, 0, 0};
+static weatherInfoStructure st_weatherData = {0, 0, 0, 0};
 
 /************************
  * Local functions
@@ -37,9 +37,13 @@ void setup() {
   Serial.println("# iot bird feeder start #");
   Serial.println("#########################");
 
-  pinMode(VibrationPin, INPUT_PULLUP);
-  // LowPower.attachInterruptWakeup(VibrationPin, fVibrationIT, FALLING);
-  attachInterrupt(VibrationPin, fVibrationIT, FALLING);
+  /********************************
+  ***** Devices configuration *****
+  *********************************/
+  // Vibration device
+  pinMode(VIBRATION_PIN, INPUT_PULLUP);
+  // LowPower.attachInterruptWakeup(VIBRATION_PIN, fVibrationIT, FALLING);
+  attachInterrupt(VIBRATION_PIN, fVibrationIT, FALLING);
 }
 
 void loop() {
@@ -62,7 +66,10 @@ void loop() {
     Serial.print("Vibration detected = ");
     Serial.println(numberIT);
 
-    // First, check if it is raining  
+    // Get food level
+    fFoodLevel_GetPercentageLevel();
+
+    // Check if it is raining  
     if(fRaindrop_isRaining())
     {
       st_weatherData.rainLevelValue = fRaindrop_GetRainLevel();
@@ -70,8 +77,12 @@ void loop() {
 
       // Send a message saying it is raining
 //    SFX_SendMessage(&humidityValue);
-     
+
+#ifdef DEBUG_MODE
+      delay(DELAY_RAINING_MS);
+#else
       LowPower.sleep(DELAY_RAINING_MS);
+#endif
     }
     else
     {
@@ -79,7 +90,11 @@ void loop() {
       // Sending datas
       //    SFX_SendMessage(&humidityValue);
 
+#ifdef DEBUG_MODE
+      delay(DELAY_IT_MS);
+#else
       LowPower.sleep(DELAY_IT_MS);
+#endif
     }
 
     // Now we can reactivate the IT
