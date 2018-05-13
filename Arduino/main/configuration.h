@@ -19,13 +19,5 @@
 #define HCSR04_DISTANCE_MAX 15  // No food is 15 cm
 #define HCSR04_MAX_RETRY    3   // Number of retries to get the food level
 
-// Data
-struct weatherInfoStructure {
-  uint8_t humidityValue;
-  uint16_t pressureValue;
-  int8_t temperatureValue;
-  uint16_t rainLevelValue;
-};
-
 #endif // _CONFIGURATION_H_
 

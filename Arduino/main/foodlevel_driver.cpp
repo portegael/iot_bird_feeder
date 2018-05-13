@@ -9,6 +9,7 @@
   | -------------------------------------------------|
 ******************************************************************/
 #include "foodlevel_driver.h"
+#include "sigfox_driver.h"
 #include "configuration.h"
 #include <HCSR04.h>
 
@@ -20,18 +21,18 @@ static UltraSonicDistanceSensor distanceSensor(HCSR04_TRIGGER_PIN, HCSR04_ECHO_P
  * @brief Read the percentage of remaining food
  * @return Level percentage
  */
-uint8_t fFoodLevel_GetPercentageLevel(void)
+void fFoodLevel_GetPercentageLevel(void)
 {
     uint8_t retry = 1;
     double distanceRawValue = 0; 
-    uint8_t levelPercentage = 0xFF;
+    st_sigfoxData.foodLevelPercentage = 100;
     
     while(retry < HCSR04_MAX_RETRY)
     {     
       distanceRawValue = distanceSensor.measureDistanceCm();
       if((distanceRawValue < HCSR04_DISTANCE_MAX) && (distanceRawValue > 0))
       {
-         levelPercentage = 100 - ( distanceRawValue * 100 /  HCSR04_DISTANCE_MAX);
+         st_sigfoxData.foodLevelPercentage = 100 - ( distanceRawValue * 100 /  HCSR04_DISTANCE_MAX);
          break;
       }
         
@@ -42,7 +43,7 @@ uint8_t fFoodLevel_GetPercentageLevel(void)
       Serial.print("Food level = ");
       Serial.print(distanceRawValue);
       Serial.print("cm / ");
-      Serial.print(levelPercentage);
+      Serial.print(st_sigfoxData.foodLevelPercentage);
       Serial.println(" %");
   #endif
 
@@ -57,11 +58,9 @@ uint8_t fFoodLevel_GetPercentageLevel(void)
       Serial.print("Food level = ");
       Serial.print(distanceRawValue);
       Serial.print("cm / ");
-      Serial.print(levelPercentage);
+      Serial.print(st_sigfoxData.foodLevelPercentage);
       Serial.println(" %");
   #endif
-
-  return levelPercentage;
 }
 
 

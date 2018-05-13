@@ -10,7 +10,19 @@
 
 #include "Arduino.h"
 
-void SFX_SendMessage(byte *humidity);
+// Data
+struct __attribute__ ((packed)) sigfoxDataStructure {
+  uint8_t isRaining;
+  uint16_t rainLevel;
+  uint8_t foodLevelPercentage;
+  int8_t temperature;
+  uint8_t humidity;
+  uint16_t pressure;
+};
+
+extern sigfoxDataStructure st_sigfoxData;
+
+void SFX_SendMessage(void);
 
 #endif // _SIGFOX_DRIVER_H_
 

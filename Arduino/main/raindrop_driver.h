@@ -14,6 +14,6 @@
 #include "Arduino.h"
 
 bool fRaindrop_isRaining(void);
-uint16_t fRaindrop_GetRainLevel(void);
+void fRaindrop_GetRainLevel(void);
 
 #endif // _RAINDROP_DRIVER_H_

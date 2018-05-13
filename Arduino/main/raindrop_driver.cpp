@@ -9,6 +9,7 @@
   | -------------------------------------------------|
 ******************************************************************/
 #include "raindrop_driver.h"
+#include "sigfox_driver.h"
 #include "configuration.h"
 
 //_________________________________________________________________________________________________________
@@ -27,6 +28,9 @@ bool fRaindrop_isRaining(void)
     isRaining = true;
   }
 
+  st_sigfoxData.isRaining = (uint8_t)isRaining;
+
+
 #ifdef DEBUG_MODE
   Serial.print("isRaining : ");
   Serial.println(isRaining);
@@ -40,16 +44,14 @@ bool fRaindrop_isRaining(void)
  * @brief Read the level of rain
  * @return level of rain as integer
  */
-uint16_t fRaindrop_GetRainLevel(void)
+void fRaindrop_GetRainLevel(void)
 {
-  uint16_t level = (uint16_t)analogRead(RAINDROP_ANALOG_PIN);
+  st_sigfoxData.rainLevel = (uint16_t)analogRead(RAINDROP_ANALOG_PIN);
 
 #ifdef DEBUG_MODE
   Serial.print("Level of Rain : ");
-  Serial.println(level);
+  Serial.println(st_sigfoxData.rainLevel);
 #endif
-
-  return level;
 }
 
 

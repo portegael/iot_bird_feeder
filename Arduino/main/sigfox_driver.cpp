@@ -9,15 +9,60 @@
 #include "SigFox.h"
 #include "configuration.h"
 
-typedef struct __attribute__ ((packed)) sfxMessage {
-  byte humidity;
+//_________________________________________________________________________________________________________
+/**
+ * @brief Display the content of the structure
+ * @return None
+ */
+static void SFX_DisplayStructContent(void)
+{
+  Serial.println("****************************");
+  Serial.println("*\t Sigfox message to be sent : ");
+
+/*
+ * isRaining;
+  uint16_t rainLevel;
+  uint8_t foodLevelPercentage;
   int8_t temperature;
-  bool birdStep = true;
-} SigfoxMessageStruct;
+  uint8_t humidity;
+  uint16_t pressure;
+ */
+  
+  Serial.print("*\t isRaining = ");
+  Serial.println(st_sigfoxData.isRaining);
 
-void SFX_SendMessage(byte *currentHumidity) {
+  Serial.print("*\t Rain level = ");
+  Serial.println(st_sigfoxData.rainLevel);
 
-  SigfoxMessageStruct message;
+  Serial.print("*\t Food level Percentage = ");
+  Serial.println(st_sigfoxData.foodLevelPercentage);
+
+  Serial.print("*\t Temperature = ");
+  Serial.print(st_sigfoxData.temperature);
+  Serial.println(" C");
+
+  Serial.print("*\t Humidity = ");
+  Serial.print(st_sigfoxData.humidity);
+  Serial.println(" %");
+
+  Serial.print("*\t Pressure = ");
+  Serial.print(st_sigfoxData.pressure);
+  Serial.println(" hPa");
+  Serial.println("****************************\r\n");
+
+}
+
+//_________________________________________________________________________________________________________
+/**
+ * @brief Send the data structure
+ * @return None
+ */
+void SFX_SendMessage(void)
+{
+
+#ifdef DEBUG_MODE
+  SFX_DisplayStructContent();
+#endif
 
   // Start the module
   SigFox.begin();
@@ -25,14 +70,10 @@ void SFX_SendMessage(byte *currentHumidity) {
   // Wait at least 30ms after first configuration (100ms before)
   delay(100);
 
-  // Get internal temperature
-  message.temperature = (int8_t)SigFox.internalTemperature();
-
-  message.humidity = *currentHumidity;
-
   SigFox.beginPacket();
 
-  SigFox.write((uint8_t*)&message, 12);
+  SigFox.write((uint8_t*)&st_sigfoxData, sizeof(st_sigfoxData));
+ // SigFox.write((byte)st_sigfoxData.isRaining);
 
   SigFox.endPacket();
 

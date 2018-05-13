@@ -2,17 +2,18 @@
   Author  : Gaël PORTÉ (portegael.pro@gmail.com)
   Title   : foodlevel_driver.cpp
   Project : Iot Bird Feeder
-  Desc    : Driver used to get the foodlevel
+  Desc    : Driver used to get the pressure, temperature and humidity
   History :
   | -- Date -- | -- Modification ------------------- |
   | 08/13/2018 | Creation                            |
   | -------------------------------------------------|
 ******************************************************************/
-#ifndef _FOODLEVEL_DRIVER_H_
-#define _FOODLEVEL_DRIVER_H_
+#ifndef _BME280_DRIVER_H_
+#define _BME280_DRIVER_H_
 
 #include "Arduino.h"
 
-void fFoodLevel_GetPercentageLevel(void);
+void fBme280_Init(void);
+void fBme280_ReadData(void);
 
-#endif // _FOODLEVEL_DRIVER_H_
+#endif // _BME280_DRIVER_H_

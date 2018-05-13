@@ -5,18 +5,20 @@
   Project : Iot Bird Feeder
   Desc    : Main file waiting for an IT to read the meteo and send it through sigfox
 ******************************************************************/
+#include <Wire.h>
 #include "ArduinoLowPower.h"
 #include "configuration.h"
 
 #include "raindrop_driver.h"
 #include "foodlevel_driver.h"
+#include "bme280_driver.h"
 #include "sigfox_driver.h"
 
 
 static bool vibrationFlag = false;
 static uint8_t numberIT = 0;
 
-static weatherInfoStructure st_weatherData = {0, 0, 0, 0};
+sigfoxDataStructure st_sigfoxData = {0, 0, 0, 0, 0, 0};
 
 /************************
  * Local functions
@@ -31,6 +33,8 @@ static void fVibrationIT(void) {
  ********************/
 void setup() {
   Serial.begin(9600);
+  Wire.begin();
+
   delay(2000);
 
   Serial.println("#########################");
@@ -40,6 +44,9 @@ void setup() {
   /********************************
   ***** Devices configuration *****
   *********************************/
+  // BME device
+  fBme280_Init();
+  
   // Vibration device
   pinMode(VIBRATION_PIN, INPUT_PULLUP);
   // LowPower.attachInterruptWakeup(VIBRATION_PIN, fVibrationIT, FALLING);
@@ -47,18 +54,6 @@ void setup() {
 }
 
 void loop() {
-
- /* 
-  humidityValue = DHT_ReadHumidity();
-  Serial.print("Humidity read : ");
-  Serial.print(humidityValue);
-  Serial.println(" %");
-
-  temperatureValue = DHT_ReadTemperature();
-  Serial.print("Temperature read : ");
-  Serial.print(temperatureValue);
-  Serial.println(" °C");
-*/
 
   if (true == vibrationFlag)
   {
@@ -69,14 +64,32 @@ void loop() {
     // Get food level
     fFoodLevel_GetPercentageLevel();
 
-    // Check if it is raining  
-    if(fRaindrop_isRaining())
-    {
-      st_weatherData.rainLevelValue = fRaindrop_GetRainLevel();
-      Serial.println("Watch out ! It is raining ! Sleeping now");
+    // Get weather information
+    fBme280_ReadData();
 
-      // Send a message saying it is raining
-//    SFX_SendMessage(&humidityValue);
+#ifdef DEBUG_MODE
+   Serial.print("Temp: ");
+   Serial.print(st_sigfoxData.temperature);
+   Serial.print("C");
+   Serial.print("\t\tHumidity: ");
+   Serial.print(st_sigfoxData.humidity);
+   Serial.print("% RH");
+   Serial.print("\t\tPressure: ");
+   Serial.print(st_sigfoxData.pressure);
+   Serial.println(" hPa");
+#endif
+
+    // Check if it is raining
+    // This value is never null
+    fRaindrop_GetRainLevel();
+    bool isRaining = fRaindrop_isRaining();
+
+    // Sending datas
+    SFX_SendMessage();
+
+    if(isRaining == true)
+    {     
+      Serial.println("Watch out ! It is raining ! Sleeping now");
 
 #ifdef DEBUG_MODE
       delay(DELAY_RAINING_MS);
@@ -86,10 +99,6 @@ void loop() {
     }
     else
     {
-
-      // Sending datas
-      //    SFX_SendMessage(&humidityValue);
-
 #ifdef DEBUG_MODE
       delay(DELAY_IT_MS);
 #else
