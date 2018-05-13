@@ -16,7 +16,7 @@
  * @brief Read the digital pin to chekc if it is raining or not. 0 means it rains
  * @return true if it is raining
  */
-bool Raindrop_isRaining(void)
+bool fRaindrop_isRaining(void)
 {
   bool isRaining = false;
   
@@ -40,9 +40,9 @@ bool Raindrop_isRaining(void)
  * @brief Read the level of rain
  * @return level of rain as integer
  */
-int Raindrop_GetRainLevel(void)
+uint16_t fRaindrop_GetRainLevel(void)
 {
-  int level = analogRead(RainDropAnalogPin);
+  uint16_t level = (uint16_t)analogRead(RainDropAnalogPin);
 
 #ifdef DEBUG_MODE
   Serial.print("Level of Rain : ");

@@ -1,18 +1,26 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
 
-// DEBUG MODE to display printf
+// Comment to disable printf
 #define DEBUG_MODE
 
+// Delay
+#define DELAY_RAINING_MS  10000
+#define DELAY_IT_MS       3000
+
 // Pins config
-#define Dht22Pin     50
+#define VibrationPin 0
 
 #define RainDropAnalogPin  A0
-#define RainDropDigitalPin 53
+#define RainDropDigitalPin 3
 
-// DHT Sensor type
-#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-
+// Data
+struct weatherInfoStructure {
+  uint8_t humidityValue;
+  uint16_t pressureValue;
+  int8_t temperatureValue;
+  uint16_t rainLevelValue;
+};
 
 #endif // _CONFIGURATION_H_
 
