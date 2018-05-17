@@ -2,7 +2,7 @@
 #define _CONFIGURATION_H_
 
 // Comment to disable printf
-#define DEBUG_MODE
+// #define DEBUG_MODE
 
 // Delay
 #define DELAY_RAINING_MS_DEBUG  10000

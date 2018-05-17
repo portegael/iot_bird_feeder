@@ -102,9 +102,7 @@ void loop() {
     // Get battery level
     fgetBatteryLevel();
 
-    SFX_SendMessage();
-
- /*   // Get food level
+    // Get food level
     fFoodLevel_GetPercentageLevel();
 
     // Get weather information
@@ -152,7 +150,7 @@ void loop() {
       LowPower.sleep(DELAY_IT_MS_RELEASE);
 #endif
     }
-*/
+
     // Now we can reactivate the IT
     Serial.println("Reactivate IT\r\n");
     digitalWrite(LED_BUILTIN, HIGH);
