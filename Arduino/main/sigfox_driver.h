@@ -18,6 +18,8 @@ struct __attribute__ ((packed)) sigfoxDataStructure {
   int8_t temperature;
   uint8_t humidity;
   uint16_t pressure;
+  uint16_t batteryVoltageMv;
+  uint8_t batteryPercentage;
 };
 
 extern sigfoxDataStructure st_sigfoxData;

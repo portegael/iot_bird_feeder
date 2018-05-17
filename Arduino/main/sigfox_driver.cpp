@@ -18,15 +18,6 @@ static void SFX_DisplayStructContent(void)
 {
   Serial.println("****************************");
   Serial.println("*\t Sigfox message to be sent : ");
-
-/*
- * isRaining;
-  uint16_t rainLevel;
-  uint8_t foodLevelPercentage;
-  int8_t temperature;
-  uint8_t humidity;
-  uint16_t pressure;
- */
   
   Serial.print("*\t isRaining = ");
   Serial.println(st_sigfoxData.isRaining);
@@ -48,6 +39,13 @@ static void SFX_DisplayStructContent(void)
   Serial.print("*\t Pressure = ");
   Serial.print(st_sigfoxData.pressure);
   Serial.println(" hPa");
+
+  Serial.print("*\t Battery = ");
+  Serial.print(st_sigfoxData.batteryVoltageMv);
+  Serial.print(" mV / ");
+  Serial.print(st_sigfoxData.batteryPercentage);
+  Serial.println(" %");
+  
   Serial.println("****************************\r\n");
 
 }
