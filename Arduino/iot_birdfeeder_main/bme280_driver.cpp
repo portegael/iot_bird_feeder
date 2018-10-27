@@ -12,11 +12,11 @@
 #include "sigfox_driver.h"
 #include "configuration.h"
 
-#include <BME280I2C.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 #include <Wire.h>
 
-static BME280I2C bme;    // Default : forced mode, standby time = 1000 ms
-                  // Oversampling = pressure ×1, temperature ×1, humidity ×1, filter off,
+Adafruit_BME280 bme; // I2C
 
 //_________________________________________________________________________________________________________
 /**
@@ -35,21 +35,14 @@ void fBme280_Init(void)
  */
 void fBme280_ReadData(void)
 {
-  float temp(NAN), hum(NAN), pres(NAN);
-
-  BME280::TempUnit tempUnit(BME280::TempUnit_Celsius);
-  BME280::PresUnit presUnit(BME280::PresUnit_hPa);
-  
-  bme.read(pres, temp, hum, tempUnit, presUnit);
-
-  st_sigfoxData.pressure    = (uint16_t)pres;
-  st_sigfoxData.temperature = (int8_t)  temp;
-  st_sigfoxData.humidity    = (uint8_t) hum;
+  st_sigfoxData.pressure    = (uint16_t)(bme.readPressure() / 100.0F);
+  st_sigfoxData.temperature = (int8_t)  bme.readTemperature();
+  st_sigfoxData.humidity    = (uint8_t) bme.readHumidity();
 
 #ifdef DEBUG_MODE
    Serial.print("Temp: ");
    Serial.print(st_sigfoxData.temperature);
-   Serial.print(" "+ String(tempUnit == BME280::TempUnit_Celsius ? 'C' :'F'));
+   Serial.print(" *C");
    Serial.print("\t\tHumidity: ");
    Serial.print(st_sigfoxData.humidity);
    Serial.print("% RH");

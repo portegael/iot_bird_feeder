@@ -13,7 +13,7 @@
 
 #include "Arduino.h"
 
-bool fRaindrop_isRaining(void);
+// bool fRaindrop_isRaining(void);
 void fRaindrop_GetRainLevel(void);
 
 #endif // _RAINDROP_DRIVER_H_

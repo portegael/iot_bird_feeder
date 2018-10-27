@@ -39,15 +39,8 @@ static void SFX_DisplayStructContent(void)
   Serial.print("*\t Pressure = ");
   Serial.print(st_sigfoxData.pressure);
   Serial.println(" hPa");
-
-  Serial.print("*\t Battery = ");
-  Serial.print(st_sigfoxData.batteryVoltageMv);
-  Serial.print(" mV / ");
-  Serial.print(st_sigfoxData.batteryPercentage);
-  Serial.println(" %");
   
   Serial.println("****************************\r\n");
-
 }
 
 //_________________________________________________________________________________________________________
@@ -65,6 +58,8 @@ void SFX_SendMessage(void)
   // Start the module
   SigFox.begin();
 
+  SigFox.debug();
+
   // Wait at least 30ms after first configuration (100ms before)
   delay(100);
 
@@ -76,6 +71,8 @@ void SFX_SendMessage(void)
   SigFox.endPacket();
 
   SigFox.end();
+
+  Serial.println("Sending SFX message end");
 
 }
 

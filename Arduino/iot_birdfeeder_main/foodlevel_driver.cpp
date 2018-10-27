@@ -15,7 +15,7 @@
 
 
 static UltraSonicDistanceSensor distanceSensor(HCSR04_TRIGGER_PIN, HCSR04_ECHO_PIN);
-
+static uint8_t previousPercentageValue = 100; // We store the previous value to correct measurement errors
 //_________________________________________________________________________________________________________
 /**
  * @brief Read the percentage of remaining food
@@ -25,14 +25,15 @@ void fFoodLevel_GetPercentageLevel(void)
 {
     uint8_t retry = 1;
     double distanceRawValue = 0; 
-    st_sigfoxData.foodLevelPercentage = 100;
-    
+    uint8_t newFoodLevelPercentage = previousPercentageValue;
+   
+    // We retry HCSR04_MAX_RETRY times the measurements in case it fails
     while(retry < HCSR04_MAX_RETRY)
     {     
       distanceRawValue = distanceSensor.measureDistanceCm();
       if((distanceRawValue < HCSR04_DISTANCE_MAX) && (distanceRawValue > 0))
       {
-         st_sigfoxData.foodLevelPercentage = 100 - ( distanceRawValue * 100 /  HCSR04_DISTANCE_MAX);
+         newFoodLevelPercentage = 100 - ( distanceRawValue * 100 /  HCSR04_DISTANCE_MAX);
          break;
       }
         
@@ -50,17 +51,13 @@ void fFoodLevel_GetPercentageLevel(void)
       retry++;
     }
 
-        
-  #ifdef DEBUG_MODE
-      Serial.print("Retry #");
-      Serial.println(retry);
-  
-      Serial.print("Food level = ");
-      Serial.print(distanceRawValue);
-      Serial.print("cm / ");
-      Serial.print(st_sigfoxData.foodLevelPercentage);
-      Serial.println(" %");
-  #endif
+    // Store the new food level
+    if(newFoodLevelPercentage < previousPercentageValue)
+    {
+      previousPercentageValue = newFoodLevelPercentage;
+    }
+
+    st_sigfoxData.foodLevelPercentage = newFoodLevelPercentage;
 }
 
 

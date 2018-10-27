@@ -16,9 +16,17 @@
 
 
 static bool vibrationFlag = false;
-static uint8_t numberIT = 0;
 
-sigfoxDataStructure st_sigfoxData = {0, 0, 0, 0, 0, 0, 0, 0};
+/*
+  uint8_t isRaining;
+  uint16_t rainLevel;
+  uint8_t foodLevelPercentage;
+  int8_t temperature;
+  uint8_t humidity;
+  uint16_t pressure;
+ */
+
+sigfoxDataStructure st_sigfoxData = {0, 0, 0, 0, 0, 0};
 
 /************************
  * Local functions
@@ -31,43 +39,12 @@ static void fVibrationIT(void) {
   vibrationFlag = true;
 }
 
-/*
- * Read the battery voltage through ADC
- */
-static void fgetBatteryLevel(void)
-{
-
-  // Read raw value
-  int vnum_12bits = analogRead(BATTERY_ANALOG_PIN);
-
-  st_sigfoxData.batteryVoltageMv = (vnum_12bits * BAT_ADC_VREF / BAT_ADC_RESOLUTION) * ((BATTERY_R1 + BATTERY_R2) / BATTERY_R2);
-
-  st_sigfoxData.batteryPercentage = st_sigfoxData.batteryVoltageMv * 100 / BATTERY_VMAX;
-    
-#ifdef DEBUG_MODE
-    Serial.println("## BATTERY ##");
-    Serial.print("\t 12bits = ");
-    Serial.println(vnum_12bits);
-
-    Serial.print("\t Voltage = ");
-    Serial.print(st_sigfoxData.batteryVoltageMv);
-    Serial.println(" mV");
-
-    Serial.print("\t Percentage = ");
-    Serial.print(st_sigfoxData.batteryPercentage);
-    Serial.println(" %");
-#endif
-}
-
 /*******************
  * Arduino functions
  ********************/
 void setup() {
   Serial.begin(9600);
   Wire.begin();
-
-  analogReadResolution(ADC_RESOLUTION);
-  analogReference(AR_DEFAULT); // 3.3V
 
   delay(2000);
 
@@ -88,20 +65,17 @@ void setup() {
   attachInterrupt(VIBRATION_PIN, fVibrationIT, FALLING);
 #else
   LowPower.attachInterruptWakeup(VIBRATION_PIN, fVibrationIT, FALLING);
-#endif
+ #endif
 }
 
 void loop() {
 
+  delay(5000); // Delay 5 seconds so we can reprogram easily
+
   if (true == vibrationFlag)
   {
-    numberIT++;  
-    Serial.print("Vibration detected = ");
-    Serial.println(numberIT);
-
-    // Get battery level
-    fgetBatteryLevel();
-
+    detachInterrupt(VIBRATION_PIN);
+    
     // Get food level
     fFoodLevel_GetPercentageLevel();
 
@@ -123,12 +97,12 @@ void loop() {
     // Check if it is raining
     // This value is never null
     fRaindrop_GetRainLevel();
-    bool isRaining = fRaindrop_isRaining();
+    // bool isRaining = fRaindrop_isRaining();
 
     // Sending datas
     SFX_SendMessage();
 
-    if(isRaining == true)
+    if(st_sigfoxData.isRaining == true)
     {     
 
 #ifdef DEBUG_MODE
@@ -137,31 +111,31 @@ void loop() {
 
       delay(DELAY_RAINING_MS_DEBUG);
 #else
-      LowPower.sleep(DELAY_RAINING_MS_RELEASE);
+      LowPower.deepSleep(DELAY_RAINING_MS_RELEASE);
 #endif
     }
-    else
+    else // if it is not raining
     {
 #ifdef DEBUG_MODE
       Serial.print("Sleeping now for (ms) : ");
       Serial.println(DELAY_IT_MS_DEBUG);
       delay(DELAY_IT_MS_DEBUG);
 #else
-      LowPower.sleep(DELAY_IT_MS_RELEASE);
+      LowPower.deepSleep(DELAY_IT_MS_RELEASE);
 #endif
     }
 
     // Now we can reactivate the IT
     Serial.println("Reactivate IT\r\n");
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(500);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(500);
-    
+
+    LowPower.attachInterruptWakeup(VIBRATION_PIN, fVibrationIT, FALLING);
+
     vibrationFlag = false;
   }
 
 #ifndef DEBUG_MODE
-  LowPower.sleep();
+  LowPower.deepSleep();
+#else
+  LowPower.deepSleep(); // Deep sleep until IT wakes us up
 #endif
 }

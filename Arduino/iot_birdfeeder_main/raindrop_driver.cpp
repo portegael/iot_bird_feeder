@@ -5,7 +5,8 @@
   Desc    : Driver used to detect the rain
   History :
   | -- Date -- | -- Modification ------------------- |
-  | 03/30/2018 | Creation                            |
+  | 03/30/2018 | Creation                           
+  | 10/27/2018 | Set the boolean is Raising depending on an analogic rain level
   | -------------------------------------------------|
 ******************************************************************/
 #include "raindrop_driver.h"
@@ -15,9 +16,10 @@
 //_________________________________________________________________________________________________________
 /**
  * @brief Read the digital pin to chekc if it is raining or not. 0 means it rains
+ * Not used for now because we directly use the analogic rain level
  * @return true if it is raining
  */
-bool fRaindrop_isRaining(void)
+/*bool fRaindrop_isRaining(void)
 {
   bool isRaining = false;
   
@@ -38,7 +40,7 @@ bool fRaindrop_isRaining(void)
 
   return isRaining;
 }
-
+*/
 //_________________________________________________________________________________________________________
 /**
  * @brief Read the level of rain
@@ -48,9 +50,16 @@ void fRaindrop_GetRainLevel(void)
 {
   st_sigfoxData.rainLevel = (uint16_t)analogRead(RAINDROP_ANALOG_PIN);
 
+  if(st_sigfoxData.rainLevel < 800)
+  {
+    st_sigfoxData.isRaining = true;
+  }
+
 #ifdef DEBUG_MODE
   Serial.print("Level of Rain : ");
   Serial.println(st_sigfoxData.rainLevel);
+  Serial.print("Is raising ? : ");
+  Serial.println(st_sigfoxData.isRaining);
 #endif
 }
 
