@@ -4,7 +4,14 @@
 // Comment to disable printf
 //#define DEBUG_MODE
 
-// Delay
+/*******************
+ * Food level
+ ********************/
+#define FOOD_LEVEL_STEP_MAX 7
+
+/*******************
+ * Delay
+ ********************/
 #define DELAY_RAINING_MS_DEBUG  10000
 #define DELAY_IT_MS_DEBUG       3000
 
@@ -13,7 +20,9 @@
 #define DELAY_RAINING_MS_RELEASE  (20 * 60 * 1000)   // 20 mins
 #define DELAY_IT_MS_RELEASE       3000  // 3 s
 
-// Devices config
+/*******************
+ * Pins config
+ ********************/
 #define VIBRATION_PIN 0
 
 #define RAINDROP_ANALOG_PIN  A0

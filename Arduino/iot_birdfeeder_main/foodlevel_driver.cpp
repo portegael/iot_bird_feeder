@@ -54,7 +54,11 @@ void fFoodLevel_GetPercentageLevel(void)
     // Store the new food level
     if(newFoodLevelPercentage < previousPercentageValue)
     {
-      previousPercentageValue = newFoodLevelPercentage;
+      // Correct measurement issue by avoiding big steps
+      if( (previousPercentageValue - newFoodLevelPercentage) < FOOD_LEVEL_STEP_MAX)
+      {
+        previousPercentageValue = newFoodLevelPercentage;
+      }
     }
 
     st_sigfoxData.foodLevelPercentage = newFoodLevelPercentage;

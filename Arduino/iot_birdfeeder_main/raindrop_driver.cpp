@@ -54,6 +54,10 @@ void fRaindrop_GetRainLevel(void)
   {
     st_sigfoxData.isRaining = true;
   }
+  else
+  {
+    st_sigfoxData.isRaining = false;
+  }
 
 #ifdef DEBUG_MODE
   Serial.print("Level of Rain : ");
